@@ -1,0 +1,18 @@
+{
+  "rasa_nlu_data": {
+    "regex_features": [],
+    "entity_synonyms": [],
+    "common_examples": [
+      {
+        "text": "Who are you?",
+        "intent": "about_agent",
+        "entities": []
+      },
+      {
+        "text": "where can I find leave types page",
+        "intent": "about_agent",
+        "entities": []
+      }
+    ]
+  }
+}

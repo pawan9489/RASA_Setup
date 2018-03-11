@@ -1,3 +1,4 @@
+MACHINE LEARNING NLP SYSTEM
 --------------------------------------------------   SETUP VM   -------------------------------------------------------
 
 Need C++ Build tools atleast c++14 
@@ -301,3 +302,5 @@ python -m rasa_nlu.evaluate -d data/test.json -c configs/config_spacy.json --mod
     "spacy_model_name": "en_core_web_lg",
     "duckling_dimensions": ["time", "duration", "timezone", "phone-number", "number", "amount-of-money", "email"]
 }
+
+corpus contains set of user messages and data
