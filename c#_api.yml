@@ -1,0 +1,38 @@
+- Navigate To Pages:
+  - parameters:
+    - page_name
+- Know My Entitlement Balances:
+  - parameters:
+    - login_reference
+    - leave_type
+    - from_date_leave: [optional]
+    - end_date_leave: [optional]
+- Know My Reportees Entitlement Balances:
+  - parameters:
+    - login_reference
+    - leave_type
+    - reportee_reference | all
+    - from_date_leave: [optional]
+    - end_date_leave: [optional]
+- Fill Timesheets:
+  - parameters:
+    - login_reference
+    - start_week
+    - from_date_leave: [optional]
+    - end_date_leave: [optional]
+- Approve Timesheet of Reportees:
+  - parameters:
+    - login_reference
+    - reportee_reference | all
+    - start_week
+    - approve | reject | park
+- Apply Leave:
+  - for 3 days? 
+    - from when?
+  - from tomorrow apply 5 days
+  - for next 4 weeks
+  - from _/_/_ to _/_/_
+  - from _/_/_ till next ___
+  - bk a lev
+- Approve Leaves of Reportees:
+- Leave status of Reportees:

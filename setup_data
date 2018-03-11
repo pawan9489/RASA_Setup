@@ -1,0 +1,303 @@
+--------------------------------------------------   SETUP VM   -------------------------------------------------------
+
+Need C++ Build tools atleast c++14 
+Download 2017 Visual studio build tools
+
+But try in other VM's just copying python folder and environment variables
+
+Make Sure that we install Python 64 bit 
+https://www.python.org/ftp/python/3.6.4/python-3.6.4-amd64.exe
+Environment Variables (
+C:\Users\Administrator\AppData\Local\Programs\Python\Python36\Scripts\
+C:\Users\Administrator\AppData\Local\Programs\Python\Python36\
+
+)
+pip install rasa_nlu
+pip install rasa_nlu[spacy]
+pip install duckling
+pip install git+https://github.com/mit-nlp/MITIE.git
+pip install rasa_nlu[mitie]
+python -m spacy download en_core_web_lg
+python -m spacy link en_core_web_lg en
+pip install pypiwin32
+
+--------------------------------------------------   Run Rasa Server   -------------------------------------------------------
+C:\Users\Administrator\AppData\Local\Programs\Python\Python36\Lib\site-packages\rasa_nlu\config.py
+Change port number if needed by default 5000.
+
+python -m rasa_nlu.server &
+Invoke-WebRequest -uri http://localhost:5000/parse?q=hello
+# Invoke-WebRequest (windows) === curl(linux)
+Get the Server Status
+Invoke-WebRequest -uri http://localhost:5000/status
+Check the Server Version
+Invoke-WebRequest -uri http://localhost:5000/version
+
+--------------------------------------------------   Training Data   -------------------------------------------------------
+
+Invoke-WebRequest --request POST --header 'content-type: application/json' -d@- --url 'localhost:5000/train?project=test_model&pipeline=keyword'
+
+{
+  "text": "hey",
+  "intent": "greet",
+  "entities": []
+}
+{
+  "text": "show me chinese restaurants",
+  "intent": "restaurant_search",
+  "entities": [
+    {
+      "start": 8,
+      "end": 15,
+      "value": "chinese",
+      "entity": "cuisine"
+    }
+  ]
+}
+
+########################################## Training data ##############
+{
+    "rasa_nlu_data": {
+        "common_examples": [],
+        "regex_features" : [],
+        "entity_synonyms": []
+    }
+}
+
+{
+  "rasa_nlu_data": {
+    "regex_features": [
+      {
+        "name": "zipcode",
+        "pattern": "[0-9]{5}"
+      },
+      {
+        "name": "greet",
+        "pattern": "hey[^\\s]*"
+      }
+    ],
+    "entity_synonyms": [
+      {
+        "value": "chinese",
+        "synonyms": ["Chinese", "Chines", "chines"]
+      },
+      {
+        "value": "vegetarian",
+        "synonyms": ["veggie", "vegg"]
+      }
+    ],
+    "common_examples": [
+      {
+        "text": "hey", 
+        "intent": "greet", 
+        "entities": []
+      }
+	]
+  }
+}
+
+########################################## Training data ##############
+
+Online Trainer --> https://rasahq.github.io/rasa-nlu-trainer/
+Offline Trainer OPEN ONLY IN CHROME
+npm i -g rasa-nlu-trainer
+
+C:\Users\Administrator\.npmrc
+PREVIOUS (
+registry=http://ihcmartifactory.es.ad.adp.com:8083/artifactory/api/npm/ihcm_npm
+export http-proxy=http://websurfing1-tin1.esi.adp.com:8080
+export https-proxy=http://websurfing1-tin1.esi.adp.com:8080
+)
+
+Open Offline Trainer
+rasa-nlu-trainer in your working directory
+
+this will open the editor in your browser
+
+options
+--source -s path to the training file (by default it will be searched recursively in the current directory)
+--port -p the web app will run here (randomly selected by default)
+
+rasa-nlu-trainer --source demo-rasa.json --port 55000
+
+SEE USER INTERACTION LOGS AT (folder in which we run the rasa_nlu.server)
+
+Create a Config file called config_spacy.json or config_mitie.json, depending on the pipeline selected, in your working directory 
+which looks like this
+
+{
+  "pipeline": "spacy_sklearn",
+  "path" : "./projects", // After Finishing which folder to paste
+  "data" : "./data/examples/rasa/demo-rasa.json" // which data should be taken
+}
+
+{
+  "project": "RasaTest",
+  "fixed_model_name": "testModel",
+  "pipeline": "spacy_sklearn",
+  "language": "en",
+  "num_threads": 4,
+  "path": "./projects/",
+  "response_log": "./logs/",
+  "log_level": "INFO",
+  "port": 5040,
+  "data": "./data/demo-rasa.json",
+  "spacy_model_name": "en_core_web_lg"
+}
+Now we can train a spacy model by running:
+
+$ python -m rasa_nlu.train -c sample_configs/config_spacy.json
+##   python -m rasa_nlu.train -c config/config_spacy.json
+
+After a few minutes, rasa NLU will finish training, and you’ll see a new folder 
+named as projects/default/model_YYYYMMDD-HHMMSS with the timestamp when training finished.
+
+
+-------------------------------------- SERVE THE MODEL ---------------------------------
+
+python -m rasa_nlu.server -c sample_configs/config_spacy.json
+##   python -m rasa_nlu.server -c config/config_spacy.json
+
+-------------------------------------- Query the Model ---------------------------------
+
+Use PostMan to test api 
+use get request for (localhost:5000/parse?q=hello)
+
+You can use this to do some error handling in your chatbot (ex: asking the user again if the confidence is low) 
+and it’s also helpful for prioritising which intents need more training data.
+
+------------------------------------- Default Configuration ______________________________________
+C:\Users\Administrator\AppData\Local\Programs\Python\Python36\Lib\site-packages\rasa_nlu\config.py
+Default configurations
+{
+  "project": null,
+  "fixed_model_name": null,
+  "pipeline": [],
+  "language": "en",
+  "num_threads": 1,
+  "max_training_processes": 1,
+  "path": "projects",
+  "response_log": "logs",
+  "storage": null,
+  "config": "config.json",
+  "log_level": "INFO",
+  "port": 5000,
+  "data": null,
+  "emulate": null,
+  "log_file": null,
+  "mitie_file": "data/total_word_feature_extractor.dat",
+  "spacy_model_name": null,
+  "token": null,
+  "cors_origins": [],
+  "aws_endpoint_url": null,
+  "max_number_of_ngrams": 7,
+  "duckling_dimensions": null,
+  "duckling_http_url": null,
+
+  "ner_crf": {
+    "BILOU_flag": true,
+    "features": [
+      ["low", "title", "upper", "pos", "pos2"],
+      ["bias", "low", "word3", "word2", "upper", "title", "digit", "pos", "pos2", "pattern"],
+      ["low", "title", "upper", "pos", "pos2"]],
+    "max_iterations": 50,
+    "L1_c": 1,
+    "L2_c": 1e-3
+  },
+
+  "intent_classifier_sklearn": {
+    "C": [1, 2, 5, 10, 20, 100],
+    "kernel": "linear"
+  }
+}
+____________________________________________________________________________________________________________
+
+_______________________________________   Data setup for Training    _________________________________________________
+{
+    "rasa_nlu_data": {
+        "common_examples": [],
+        "regex_features" : [],
+        "entity_synonyms": []
+    }
+}
+
+The text is the search query; An example of what would be submitted for parsing. [required]
+The intent is the intent that should be associated with the text. [optional]
+The entities are specific parts of the text which need to be identified. [optional]
+
+{
+  "text": "show me chinese restaurants",
+  "intent": "restaurant_search",
+  "entities": [
+    {
+      "start": 8,
+      "end": 15,
+      "value": "chinese",
+      "entity": "cuisine"
+    }
+  ]
+}
+
+$ curl -XPOST localhost:5000/parse -d '{"q":"hello there", "project": "my_restaurant_search_bot"}
+$ curl -XPOST localhost:5000/parse -d '{"q":"hello there", "project": "my_restaurant_search_bot", "model": <model_XXXXXX>}
+
+
+$ curl -XPOST localhost:5000/train?project=my_project -d @data/examples/rasa/demo-rasa.json
+
+domain-specific entity recognisers are the "ner_mitie" and "ner_crf"
+"ner_duckling" for dates like “next Thursday at 8pm”
+
+Improving models from feedback using Log files
+The files in this directory contain one json object per line. You can fix any incorrect predictions 
+and add them to your training set to improve your parser.
+
+JUST INTENT CLASSIFICATION for faster development of intents
+"pipeline": ["nlp_spacy", "ner_crf", "ner_synonyms"]
+
+
+"nlp_spacy", "tokenizer_spacy", "intent_entity_featurizer_regex", "intent_featurizer_spacy",  "ner_crf", "ner_synonyms",  "intent_classifier_sklearn", "ner_duckling"
+, "intent_featurizer_ngrams" 
+, "ner_spacy"
+
+
+"pipeline": ["nlp_spacy", "tokenizer_spacy", "intent_entity_featurizer_regex", "intent_featurizer_spacy", "ner_crf", "ner_synonyms",  "intent_classifier_sklearn", "ner_duckling"]
+
+"spacy_sklearn"
+
+["nlp_spacy", "tokenizer_spacy", "intent_entity_featurizer_regex", "intent_featurizer_spacy", "ner_spacy", "ner_crf", "ner_synonyms", "ner_duckling","intent_classifier_sklearn" ]
+
+duckling/wrapper.py
+
+def __init__(self,
+            jvm_started=False,
+            parse_datetime=False,
+            language=Language.ENGLISH,
+            minimum_heap_size='128m',
+            maximum_heap_size='2048m'): # change to 6GB
+["nlp_spacy", "tokenizer_spacy", "intent_entity_featurizer_regex", "intent_featurizer_spacy",
+"ner_crf", "ner_synonyms", "ner_duckling", "intent_classifier_sklearn" ]
+
+# If locations are required then use ner_spacy
+["nlp_spacy", "tokenizer_spacy", "intent_entity_featurizer_regex", "intent_featurizer_spacy",
+"ner_crf", "ner_synonyms", "ner_duckling", "ner_spacy", "intent_classifier_sklearn" ]
+
+______________________________________ Evaluation ______________________________________
+
+python -m rasa_nlu.evaluate -d data/my_test.json -m models/my_model -c my_nlu_config.json
+
+python -m rasa_nlu.evaluate -d data/test.json -m projects/default/model_20180311-085812 -c configs/config_spacy.json
+
+
+# crossvalidation and re-evaluate
+python -m rasa_nlu.evaluate -d data/examples/rasa/demo-rasa.json -c sample_configs/config_spacy.json --mode crossvalidation
+
+python -m rasa_nlu.evaluate -d data/test.json -c configs/config_spacy.json --mode crossvalidation
+
+
+{
+    "pipeline": ["nlp_spacy", "tokenizer_spacy", "intent_entity_featurizer_regex", "intent_featurizer_spacy","ner_crf", "ner_synonyms", "ner_duckling", "intent_classifier_sklearn" ],
+    "path" : "./projects",
+    "data" : "./data/iHCM_intents/navigation",
+    "spacy_model_name": "en_core_web_lg",
+    "duckling_dimensions": ["time", "duration", "timezone", "phone-number", "number", "amount-of-money", "email"]
+}

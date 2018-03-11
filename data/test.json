@@ -1,0 +1,32 @@
+{
+  "rasa_nlu_data": {
+    "regex_features": [],
+    "entity_synonyms": [],
+    "common_examples": [
+      {
+        "text": "where is sickness Page",
+        "intent": "navigate_page",
+        "entities": [
+          {
+            "start": 9,
+            "end": 17,
+            "value": "sickness",
+            "entity": "page"
+          }
+        ]
+      },
+      {
+        "text": "where can I find leave types page",
+        "intent": "navigate_page",
+        "entities": [
+          {
+            "start": 17,
+            "end": 28,
+            "value": "leave types",
+            "entity": "page"
+          }
+        ]
+      }
+    ]
+  }
+}

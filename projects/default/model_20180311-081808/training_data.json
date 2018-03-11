@@ -1,0 +1,84 @@
+{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "intent": "navigate_page",
+        "entities": [
+          {
+            "start": 15,
+            "end": 31,
+            "value": "Sickness History",
+            "entity": "page"
+          }
+        ],
+        "text": "navigate me to Sickness History Page"
+      },
+      {
+        "intent": "navigate_page",
+        "entities": [
+          {
+            "start": 9,
+            "end": 16,
+            "value": "payroll",
+            "entity": "page"
+          }
+        ],
+        "text": "where is payroll page"
+      },
+      {
+        "intent": "navigate_page",
+        "entities": [
+          {
+            "start": 10,
+            "end": 17,
+            "value": "Schemes",
+            "entity": "page"
+          }
+        ],
+        "text": "Get me to Schemes"
+      },
+      {
+        "intent": "navigate_page",
+        "entities": [
+          {
+            "start": 10,
+            "end": 21,
+            "value": "Leave Types",
+            "entity": ""
+          }
+        ],
+        "text": "Get me to Leave Types page"
+      },
+      {
+        "intent": "affirm",
+        "entities": [],
+        "text": "yep"
+      },
+      {
+        "intent": "affirm",
+        "entities": [],
+        "text": "yeah"
+      },
+      {
+        "intent": "affirm",
+        "entities": [],
+        "text": "indeed"
+      }
+    ],
+    "regex_features": [
+      {
+        "name": "navigate",
+        "pattern": "navigate[^\\s]*"
+      }
+    ],
+    "entity_synonyms": [
+      {
+        "value": "navigate",
+        "synonyms": [
+          "nvg",
+          "navig"
+        ]
+      }
+    ]
+  }
+}
